@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dice-Dude!</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+      <div id="buttonGroup">
+        <label for="cars">n</label>
+
+        <select name="rolls" id="rolls">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+        <div class="button">d4</div>
+        <div class="button">d6</div>
+        <div class="button">d8</div>
+        <div class="button">d10</div>
+        <div class="button">d12</div>
+        <div class="button">d20</div>
+        <label for="cars">mod</label>
+
+        <select name="mod" id="mod">
+          <option value="-1">-1</option>
+          <option value="-2">-2</option>
+          <option value="-3">-3</option>
+          <option value="-4">-4</option>
+          <option value="-5">-5</option>
+          <option value="-6">-6</option>
+          <option value="-7">-7</option>
+          <option value="-8">-8</option>
+          <option value="-9">-9</option>
+          <option value="-10">-10</option>
+          <option selected="selected" value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+      <div class="logWrap">
+        <h3 class="Roll Log">Roll Log</h3>
+        <ul class="log"></ul>
+      </div>
+    <script>
+
+      class DiceControl {
+        constructor(){
+          this.currentDie = '';
+          this.addEventHandlers();
+          this.buttons = document.querySelectorAll('.button');
+          this.buttons[0].classList.add('active');
+        }
+
+        addEventHandlers = () => {
+          const buttons = document.getElementById('buttonGroup');
+          console.log(buttons);
+          document.addEventListener('keyup', (e) => this.handleKeyboardPress(e), false);
+          buttons.addEventListener('click', (e) => this.rollDice(e.target));
+          console.log(buttons);  
+        }
+
+        handleKeyboardPress = (e) => {
+          // let selectedDice = document.querySelector('.active').innerHTML;
+          let selectedDice = '';
+          let selectedDiceIndex = 0;
+          this.buttons.forEach((button, index) => {
+              if(button.classList.contains('active')){
+                selectedDice = button.innerHTML;
+                selectedDiceIndex = index;
+              };
+          });
+
+          console.log(selectedDice, selectedDiceIndex);
+          
+          switch (e.code) {
+                case 'ArrowUp':
+                    console.log('move focus up');
+                    break;
+                case 'ArrowDown': 
+                    console.log('move focus down');
+
+                    break;
+                case 'ArrowLeft': 
+                    console.log('move focus left');
+                    this.changeFocus(selectedDiceIndex--);
+                    break;
+								case 'ArrowRight':
+                    console.log('move focus right');
+                    this.changeFocus(selectedDiceIndex++);
+                    break;
+                case 'Enter':
+                    console.log('Roll the dice if on a die option');
+                    this.addLog();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        changeFocus = (newIndex) => {
+          console.log(newIndex)
+          this.buttons.forEach((button, index) => {
+            console.log(button)
+              if(newIndex === index){
+                button.classList.toggle('active')
+              } else {
+                button.classList.toggle('active')
+              }
+          });
+        }
+
+        addLog = () => {
+
+          let results = this.rollDice(5, 'd20', -2);
+
+        }
+
+        rollDice = (n, nSidedDice, mod) => {
+          let sides = parseInt(nSidedDice.slice(1));
+          let rolls = [];
+          let count = 0;
+          while(count < sides * n){
+            rolls.push(Math.floor( Math.random() * ( 1 + sides - 1 ) ) + 1);
+            count++;
+          }
+          console.log(rolls)
+          let rollSum = rolls.reduce((acc, num) => acc += num);
+          console.log(rollSum, mod);
+          let modIncluded = rollSum + mod;
+          console.log(modIncluded);
+        }
+      }
+
+      
+      rollDice = (n, nSidedDice, mod) => {
+          let sides = parseInt(nSidedDice.slice(1));
+          let rolls = [];
+          let count = 0;
+          while(count < sides * n){
+            rolls.push(Math.floor( Math.random() * ( 1 + sides - 1 ) ) + 1);
+            count++;
+          }
+          console.log(rolls)
+          let rollSum = rolls.reduce((acc, num) => acc += num);
+          console.log(rollSum, mod);
+          let modIncluded = rollSum + mod;
+          console.log(modIncluded);
+        }
+      
+
+      rollDice(5, 'd20', -2)
+
+      window.addEventListener('load', () => {
+        const newGame = new DiceControl();
+    }, false);
+    </script>
+  </body>
+</html>
